@@ -1,0 +1,170 @@
+ASG4 SRTF
+#include <stdio.h> 
+#include <limits.h> 
+int main(){ 
+
+    int n,i,j; 
+
+    printf("Enter the no. of processes "); 
+
+    scanf("%d",&n); 
+
+ 
+
+    int pid[n],at[n],bt[n],rt[n],ct[n],tat[n],wt[n],is_completed[n]; 
+
+    int completed=0,time=0; 
+
+ 
+
+    for(i=0;i<n;i++){ 
+
+        pid[i]=i+1; 
+
+        printf("Enter Arrival and burst time for P%d ",i+1); 
+
+        scanf("%d %d",&at[i],&bt[i]); 
+
+        rt[i]=bt[i]; 
+
+        is_completed[i] = 0; 
+
+    } 
+
+ 
+
+    int timeline[1000],t_len=0; 
+
+ 
+
+    while(completed<n){ 
+
+        int shortest=-1; 
+
+        int min_rt=INT_MAX; 
+
+  
+
+      for(i=0;i<n;i++){ 
+
+        if(at[i]<=time && is_completed[i]==0 && rt[i]<min_rt){ 
+
+            min_rt=rt[i]; 
+
+            shortest=i; 
+
+        } 
+
+    } 
+
+ 
+
+    if(shortest==-1){ 
+
+        timeline[t_len++]=-1; 
+
+        time++; 
+
+        continue; 
+
+    } 
+
+ 
+
+    rt[shortest]--; 
+
+    timeline[t_len++]=pid[shortest]; 
+
+    time++; 
+
+ 
+
+    if(rt[shortest]==0){ 
+
+        is_completed[shortest]=1; 
+
+        ct[shortest]=time; 
+
+        tat[shortest]=ct[shortest]-at[shortest]; 
+
+        wt[shortest]=tat[shortest]-bt[shortest]; 
+
+        completed++; 
+
+    } 
+
+} 
+
+ 
+
+    float sum_tat=0,sum_wt=0; 
+
+     for(i=0;i<n;i++){ 
+
+       sum_tat+=tat[i]; 
+
+       sum_wt+=wt[i]; 
+
+} 
+
+ 
+
+    printf("\nProcess\tAT\tBT\tCT\tTAT\tWT\n"); 
+
+ 
+
+    for(i=0;i<n;i++){ 
+
+        printf("P%d\t%d\t%d\t%d\t%d\t%d\n",pid[i],at[i],bt[i],ct[i],tat[i],wt[i]); 
+
+    } 
+
+ 
+
+    printf("\nGantt Chart\n:|"); 
+
+    for(i=0;i<t_len;i++){ 
+
+        int j=i+1; 
+
+        while(j<t_len && timeline[j]==timeline[i]) j++; 
+
+        if(timeline[i]==-1){ 
+
+            printf(" IDLE |"); 
+
+        } 
+
+        else{ 
+
+            printf("P%d |",timeline[i]); 
+
+        }     
+
+        i=j; 
+
+    } 
+
+    printf("\n0"); 
+
+    for(i=0;i<t_len;i++){ 
+
+        int j=i+1; 
+
+        while(j<t_len && timeline[j]==timeline[i]) j++; 
+
+        printf(" %d",j); 
+
+        i=j; 
+
+    } 
+
+    printf("\n"); 
+
+ 
+
+    printf("\nAverage Turnaround %f\n",sum_tat/n); 
+
+    printf("\nAverage waiting %f\n",sum_wt/n); 
+
+}

@@ -1,0 +1,54 @@
+PIPE ASG5
+#include<stdio.h> 
+#include <unistd.h> 
+#include <string.h> 
+#include <sys/wait.h> 
+#include <stdlib.h> 
+ 
+int main(){ 
+int filed[2]; 
+pid_t pid; 
+char write_msg[100]; 
+printf("enter the msg"); 
+fgets(write_msg, sizeof(write_msg), stdin); 
+char read_msg[100]; 
+ 
+   if (pipe(filed) == -1) { 
+     perror("pipe creation failed"); 
+     return 1; 
+ } 
+  
+pid = fork(); 
+    if (pid < 0) { 
+      perror("fork error"); 
+      return 1; 
+} 
+ 
+    if (pid > 0) { 
+    
+        close(filed[0]);   
+ 
+        write(filed[1], write_msg , strlen(write_msg) + 1); 
+ 
+        int status; 
+        wait(&status);   
+ 
+        if (WIFEXITED(status)) { 
+            printf("Child exited with status: %d\n", WEXITSTATUS(status)); 
+        } else { 
+            printf("Child did not terminate normally\n"); 
+        } 
+ 
+        printf("Parent process terminating.\n"); 
+        exit(0);   
+    } else { 
+ 
+        close(filed[1]); 
+        
+        read(filed[0], read_msg, sizeof(read_msg)); 
+        printf("Child received: %s\n", read_msg); 
+ 
+        exit(42);   
+    } 
+ 
+    return 0;
