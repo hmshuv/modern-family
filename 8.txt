@@ -1,0 +1,36 @@
+ASG 1
+#/bin/bash 
+while true 
+do 
+echo "Enter the first number: 
+read a 
+echo "Enter the second number: " 
+read b 
+echo "Choose operation: 1. Addition 2. Subtraction 3. Multiplication 4. Division" 
+read op 
+case $op in 
+1) result=$((a + b)):; 
+2) result=S((a - b));: 
+3) result=$(a* b);; 
+4) 
+esac 
+f 
+") 
+done 
+if ("$b" -eq 0 ]; then 
+echo "Division by 0 not allowed as it tends to infinity" 
+continue 
+else 
+result=$(echo "'scale=4; $a /$b" | bc) 
+fi
+;;
+echo "answer: $result" 
+echo "Invalid operator" 
+continue 
+;;
+echo "Thank you!" 
+echo "Do you want to perform another operation? (y/n): * 
+read choice 
+if [[ "$choice" !="y° && "$choice" != "y]: then 
+echo "Thankyou" 
+break
